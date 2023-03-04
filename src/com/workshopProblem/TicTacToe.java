@@ -18,20 +18,18 @@ public class TicTacToe {
         List<Integer> PlayerPosition = new ArrayList<>();
         List<Integer> cpuPosition = new ArrayList<>();
         List<Integer> occupiedPosition = new ArrayList<>();
-        String[] SymbolArray = new String[2];
         play.settingBoard(board);
         boolean toss = play.decidingToss();
         boolean playerResult = false;
         boolean cpuResult = false;
-        SymbolArray = play.choosingSymbol(toss, sc);
+        String[] SymbolArray = new String[2];
+        SymbolArray = play.choosingSymbol(toss, sc,SymbolArray);
         String playerSymbol = SymbolArray[0];
         String cpuSymbol = SymbolArray[1];
         do {
             if (toss) {
                 play.displayBoard(board);
-                System.out.println("enter a the position you want to place your symbol, between 1-9");
-                int index = sc.nextInt();
-                index = checkingIfPresent(sc, index, occupiedPosition);
+                int index = checkingIfPresent(sc,occupiedPosition);
                 occupiedPosition.add(index);
                 PlayerPosition.add(index);
                 board = play.settingSymbol(board, playerSymbol, index);
@@ -41,6 +39,15 @@ public class TicTacToe {
                 }
                 toss = false;
             } else {
+                int index = cpuMove(occupiedPosition);
+                cpuPosition.add(index);
+                occupiedPosition.add(index);
+                board=play.settingSymbol(board,cpuSymbol,index);
+                cpuResult = play.checkForWin(cpuPosition);
+                if(cpuResult){
+                    System.out.println("cpu wins");
+                    break;
+                }
                 toss = true;
             }
             if (play.checkForDraw(board)) {
@@ -51,19 +58,26 @@ public class TicTacToe {
         play.displayBoard(board);
         sc.close();
     }
-    private static int checkingIfPresent(Scanner sc, int index, List<Integer> occupiedPosition) {
-        if (occupiedPosition.contains(index)) {
+
+    private static int checkingIfPresent(Scanner sc, List<Integer> occupiedPosition) {
+        System.out.println("enter a the position you want to place your symbol, between 1-9");
+        int index = sc.nextInt();
+        while (occupiedPosition.contains(index)){
             System.out.println("enter a different position " + index + " is already present");
             index = sc.nextInt();
-            checkingIfPresent(sc, index, occupiedPosition);
+        }
+        return index;
+    }
+    private static int cpuMove(List<Integer> occupiedPosition) {
+        Random r = new Random();
+        int index = r.nextInt(9) + 1;
+        while (occupiedPosition.contains(index)) {
+            index = r.nextInt(9) + 1;
         }
         return index;
     }
 }
-
 class PlayingTTT {
-
-    // function to re-set the board.
     public void settingBoard(String[][] board) {
         for (int i = 0; i < board.length; i++) {
             for (int j = 0; j < board.length; j++) {
@@ -71,26 +85,27 @@ class PlayingTTT {
             }
         }
     }
-    public String[] choosingSymbol(boolean toss, Scanner sc) {
-        String[] arr = new String[2];
+    public String[] choosingSymbol(boolean toss, Scanner sc,String[] symbolArray) {
         if (toss) {
             System.out.println("Enter a symbol");
-            arr[0] = sc.nextLine();
-            if (arr[0] == "X") {
-                arr[1] = "O";
+            String symbol = sc.nextLine();
+            if(symbol == "X"){
+             symbolArray[0] = "X";
+                symbolArray[1] = "O";
             } else {
-                arr[1] = "X";
+                symbolArray[0] = "X";
+                symbolArray[1] = "X";
             }
         } else {
             if (decidingToss()) {
-                arr[0] = "X";
-                arr[1] = "O";
+                symbolArray[0] = "X";
+                symbolArray[1] = "O";
             } else {
-                arr[0] = "O";
-                arr[1] = "X";
+                symbolArray[0] = "O";
+                symbolArray[1] = "X";
             }
         }
-        return arr;
+        return symbolArray;
     }
     public boolean decidingToss() {
         Random r = new Random();
@@ -113,14 +128,12 @@ class PlayingTTT {
         }
         System.out.println("\n" + str);
     }
-
     public boolean checkForWin(List<Integer> board) {
         if (checkRowsForWin(board) || checkColumnsForWin(board) || checkDiagonalsForWin(board)) {
             return true;
         }
         return false;
     }
-
     public boolean checkRowsForWin(List<Integer> board) {
         List<Integer> row0 = new ArrayList<>();
         row0.add(1);
@@ -139,7 +152,6 @@ class PlayingTTT {
         }
         return false;
     }
-
     public boolean checkColumnsForWin(List<Integer> board) {
         List<Integer> col0 = new ArrayList<>();
         col0.add(1);
@@ -158,7 +170,6 @@ class PlayingTTT {
         }
         return false;
     }
-
     public boolean checkDiagonalsForWin(List<Integer> board) {
         List<Integer> dig0 = new ArrayList<>();
         dig0.add(1);
@@ -173,7 +184,6 @@ class PlayingTTT {
         }
         return false;
     }
-
     public boolean checkForDraw(String[][] board) {
         for (int i = 0; i < board.length; i++) {
             for (int j = 0; j < board.length; j++) {
@@ -184,7 +194,6 @@ class PlayingTTT {
         }
         return true;
     }
-
     public String[][] settingSymbol(String[][] board, String symbol, int index) {
         index -= 1;
         int x = (int) Math.floor(index / 3);
