@@ -1,12 +1,20 @@
 package com.workshopProblem;
 
+import java.util.Random;
+
 public class TicTacToe {
     public static void main(String[] args) {
         System.out.println("Welcome to Tic Tac Toe Game");
         System.out.println();
-        PlayingTTT play = new PlayingTTT();
-        String[][] board = new String[3][3];
+         final PlayingTTT play = new PlayingTTT();
+         final String[][] board = new String[3][3];
         play.settingBoard(board);
+        String firstPlay = " ";
+        if(play.decidingToss()){
+            firstPlay = firstPlay+"player";
+        }else{
+            firstPlay = firstPlay+"computer";
+        }
     }
 }
 class PlayingTTT {
@@ -16,6 +24,10 @@ class PlayingTTT {
                 board[i][j] = ". ";
             }
         }
+    }
+    public boolean decidingToss(){
+        final Random r = new Random();
+        return r.nextBoolean();
     }
 }
 
