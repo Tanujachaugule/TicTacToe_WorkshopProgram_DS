@@ -8,33 +8,46 @@ public class TicTacToe {
         System.out.println();
         String[][] board = new String[3][3];
 
+        // creating an object of PlayingTTT class.
         PlayingTTT play = new PlayingTTT();
 
         Scanner sc = new Scanner(System.in);
+
+        // calling the function to play the game.
         playingTheGame(board, play, sc);
 
         sc.close();
     }
     public static void playingTheGame(String[][] board, PlayingTTT play, Scanner sc) {
 
+        // list of index for player position cpu position and position occupied by both
+        // of them.
         List<Integer> PlayerPosition = new ArrayList<>();
         List<Integer> cpuPosition = new ArrayList<>();
         List<Integer> occupiedPosition = new ArrayList<>();
+
+        // calling the function to set the re-set the board.
         play.settingBoard(board);
 
+        // calling a function to decide who will play first amd there symbol choice.
         boolean toss = play.decidingToss();
 
+        // calling a function to choose the player and cpu symbol.
         String[] SymbolArray = new String[2];
         SymbolArray = play.choosingSymbol(toss, sc, SymbolArray);
         String playerSymbol = SymbolArray[0];
         String cpuSymbol = SymbolArray[1];
 
+        // setting winning condition for both opponents.
         boolean playerResult = false;
         boolean cpuResult = false;
-        do {
 
+        // playing till either of the competitor win or tie.
+        do {
+            // if toss is true it will be player turn.
             if (toss) {
 
+                // calling a function to display the board.
                 play.displayBoard(board);
 
                 // calling a function to get cell index from the user.
@@ -134,7 +147,6 @@ public class TicTacToe {
         }
         return index;
     }
-
     private static int generateRandom(int maxRandom) {
         Random r = new Random();
         return r.nextInt(maxRandom);
@@ -248,26 +260,26 @@ class PlayingTTT {
         return false;
     }
     private boolean checkRowsForWin(List<Integer> board) {
-        List<Integer> row0 = new ArrayList<>(Arrays.asList(1,2,3));
-        List<Integer> row1 = new ArrayList<>(Arrays.asList(4,5,6));
-        List<Integer> row2 = new ArrayList<>(Arrays.asList(7,8,9));
+        List<Integer> row0 = new ArrayList<>(Arrays.asList(1, 2, 3));
+        List<Integer> row1 = new ArrayList<>(Arrays.asList(4, 5, 6));
+        List<Integer> row2 = new ArrayList<>(Arrays.asList(7, 8, 9));
         if (board.containsAll(row0) || board.containsAll(row1) || board.containsAll(row2)) {
             return true;
         }
         return false;
     }
     private boolean checkColumnsForWin(List<Integer> board) {
-        List<Integer> col0 = new ArrayList<>(Arrays.asList(1,4,7));
-        List<Integer> col1 = new ArrayList<>(Arrays.asList(2,5,8));
-        List<Integer> col2 = new ArrayList<>(Arrays.asList(3,6,9));
+        List<Integer> col0 = new ArrayList<>(Arrays.asList(1, 4, 7));
+        List<Integer> col1 = new ArrayList<>(Arrays.asList(2, 5, 8));
+        List<Integer> col2 = new ArrayList<>(Arrays.asList(3, 6, 9));
         if (board.containsAll(col0) || board.containsAll(col1) || board.containsAll(col2)) {
             return true;
         }
         return false;
     }
     private boolean checkDiagonalsForWin(List<Integer> board) {
-        List<Integer> dig0 = new ArrayList<>(Arrays.asList(1,5,9));
-        List<Integer> dig1 = new ArrayList<>(Arrays.asList(3,5,7));
+        List<Integer> dig0 = new ArrayList<>(Arrays.asList(1, 5, 9));
+        List<Integer> dig1 = new ArrayList<>(Arrays.asList(3, 5, 7));
         if (board.containsAll(dig0) || board.containsAll(dig1)) {
             return true;
         }
